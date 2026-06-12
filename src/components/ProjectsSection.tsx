@@ -4,6 +4,7 @@ import projectAlcohol from "@/assets/projectAlcohol.png";
 import projectCourier from "@/assets/projectCourier.png";
 import projectAnimal from "@/assets/projectAnimal.png";
 import projectGs from "@/assets/projectGS.png";
+import projectgfa from "@/assets/projectgfa.jpg"
 
 interface Project {
   title: string;
@@ -43,6 +44,15 @@ const projects: Project[] = [
     github: "https://github.com/GVishnuVardhanRaju/Elixir-Insight",
   },
   {
+    title: "Huner Industries",
+    description:
+      "An educational and historical reference archive documenting notable firearms, manufacturers, and their historical development.",
+    image: projectgfa,
+    tech: ["TypeScript", "Tailwind CSS", "React", "JavaScript", "HTML", "CSS"],
+    live: "https://huner-industries.vercel.app/",
+    github: "https://github.com/GVishnuVardhanRaju/Huner-Industries",
+  },
+  {
     title: "The Circle of Animal Dreamland",
     description:
       "The goal of this project is to create a simple and user-friendly platform that connects animals with loving homes.",
@@ -73,7 +83,7 @@ const ProjectCard = ({
       <img
         src={project.image}
         alt={project.title}
-        className="w-full h-auto object-contain rounded-lg transition-transform duration-300 hover:scale-[1.02]"
+        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         loading="lazy"
       />
     </div>
@@ -137,7 +147,7 @@ const ProjectsSection = () => {
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
       </div>
 
-      <div className="container max-w-3xl mx-auto relative z-10">
+      <div className="container max-w-6xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -153,11 +163,11 @@ const ProjectsSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid gap-6">
-          {projects.map((p, i) => (
-            <ProjectCard key={p.title} project={p} index={i} />
-          ))}
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  {projects.map((p, i) => (
+    <ProjectCard key={p.title} project={p} index={i} />
+  ))}
+</div>
       </div>
     </section>
   );
