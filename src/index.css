@@ -305,3 +305,113 @@ html, body {
     max-width: 1200px;
   }
 }
+
+/* ================================
+   MOBILE RESPONSIVENESS FIX
+   Realme 7 Pro and similar phones
+   ================================ */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent flex children from forcing horizontal overflow */
+.flex,
+[class*="flex"] {
+  min-width: 0;
+}
+
+/* Mobile container */
+@media (max-width: 639px) {
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  body {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  h1 {
+    font-size: clamp(2.35rem, 10vw, 3.2rem);
+    line-height: 1.05;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+
+  /* Section panels */
+  .section-panel {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 1.75rem;
+  }
+
+  /* Frost cards */
+  .frost-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  /* Long email / URLs / usernames */
+  a,
+  p,
+  span {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Contact rows */
+  .contact-item {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .contact-item span,
+  .contact-item a {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Prevent icons from shrinking */
+  .contact-item svg,
+  .contact-item img {
+    flex-shrink: 0;
+  }
+}
+
+/* Extra-small phones */
+@media (max-width: 400px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .section-panel {
+    border-radius: 1.5rem;
+  }
+
+  .frost-card {
+    border-radius: 1.15rem;
+  }
+}
