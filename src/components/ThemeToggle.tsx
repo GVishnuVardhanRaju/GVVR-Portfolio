@@ -15,6 +15,19 @@ const ThemeToggle = () => {
   }, [dark]);
 
   useEffect(() => {
+    const handleMedia = (event: MediaQueryListEvent) => {
+      if (!localStorage.getItem("theme")) {
+        setDark(event.matches);
+      }
+    };
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", handleMedia);
+
+    return () => mediaQuery.removeEventListener("change", handleMedia);
+  }, []);
+
+  useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
       setDark(true);

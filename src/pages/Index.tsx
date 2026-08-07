@@ -1,24 +1,18 @@
-import Navbar from "@/components/Navbar";
+import Layout from "@/components/Layout";
 import HeroSection from "@/components/HeroSection";
 import SkillsSection from "@/components/SkillsSection";
 import ProjectsSection from "@/components/ProjectsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import BackToTop from "@/components/BackToTop";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <ScrollProgress />
-      <Navbar />
+    <Layout>
       <HeroSection />
       <SkillsSection />
       <ProjectsSection />
       <ContactSection />
-      <Footer />
-      <BackToTop />
-    </div>
+    </Layout>
   );
 };
 

@@ -12,94 +12,139 @@ const navLinks = [
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  // 🔥 Typing Effect
+  const [active, setActive] = useState<string>("#home");
   const fullName = "G Vishnu Vardhan Raju";
   const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
     let index = 0;
+    let deleting = false;
+    let timer: number | undefined;
 
-    const interval = setInterval(() => {
-      setDisplayText(fullName.slice(0, index + 1));
-      index++;
+    const step = () => {
+      if (!deleting) {
+        index += 1;
+        setDisplayText(fullName.slice(0, index));
 
-      if (index === fullName.length) {
-        clearInterval(interval);
+        if (index === fullName.length) {
+          timer = window.setTimeout(() => {
+            deleting = true;
+            step();
+          }, 900);
+          return;
+        }
+
+        timer = window.setTimeout(step, 110);
+      } else {
+        index -= 1;
+        setDisplayText(fullName.slice(0, index));
+
+        if (index === 0) {
+          timer = window.setTimeout(() => {
+            deleting = false;
+            step();
+          }, 300);
+          return;
+        }
+
+        timer = window.setTimeout(step, 60);
       }
-    }, 80);
+    };
 
-    return () => clearInterval(interval);
-  }, []);
+    step();
+
+    return () => {
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [fullName]);
 
   const handleNavClick = (href: string) => {
     setMenuOpen(false);
     const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  useEffect(() => {
+    const sections = navLinks.map((link) => document.querySelector(link.href)).filter(Boolean) as Element[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(`#${entry.target.id}`);
+          }
+        });
+      },
+      { root: null, rootMargin: "-40% 0px -50% 0px", threshold: 0 }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <>
       <motion.nav
-        initial={{ y: -80 }}
-        animate={{ y: 0 }}
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="fixed top-0 left-0 right-0 z-50 glass-strong"
+        className="fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:px-6"
       >
-        <div className="w-full max-w-7xl mx-auto px-4 flex items-center justify-between h-14 md:h-16">
-          
-          {/* 🔥 Hacker Typing Name */}
-          <span className="font-display font-bold text-sm md:text-base tracking-tight text-foreground whitespace-nowrap">
-            {displayText}
-            <span className="ml-1 animate-pulse text-primary">|</span>
-          </span>
+        <div className="w-full max-w-6xl rounded-full border border-slate-200/65 bg-white/85 px-4 py-3 shadow-[0_22px_70px_-30px_rgba(56,189,248,0.32)] backdrop-blur-2xl dark:border-slate-700/70 dark:bg-slate-950/80">
+          <div className="flex items-center justify-between gap-3 sm:h-14">
+<div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+            <div className="flex flex-col gap-1">
+              <span className="truncate text-sm font-semibold tracking-tight text-slate-800 md:text-base dark:text-slate-100">
+                {displayText}
+                <span className="ml-1 animate-pulse text-sky-500">|</span>
+              </span>
+            </div>
+            </div>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-300 ease-in-out rounded-full hover:bg-secondary/60"
+            <div className="hidden flex-1 items-center justify-center gap-2 md:flex">
+              {navLinks.map((link) => (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                    active === link.href
+                      ? "bg-sky-100 text-sky-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] dark:bg-sky-500/15 dark:text-sky-200 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                      : "text-slate-600 hover:bg-white/90 hover:text-sky-700 dark:text-slate-300 dark:hover:bg-slate-800/80 dark:hover:text-sky-300"
+                  }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+              <a
+                href="/resume.pdf"
+                download
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition-all duration-300 hover:bg-white/90 hover:text-sky-700"
               >
-                {link.label}
+                Resume
+              </a>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2">
+              <ThemeToggle />
+              <a
+                href="https://github.com/GVishnuVardhanRaju"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/70 bg-white/75 transition-all duration-300 hover:scale-105 hover:text-sky-700 dark:border-slate-700/70 dark:bg-slate-900/75 dark:hover:text-sky-300"
+              >
+                <Github size={18} className="text-slate-700 dark:text-slate-100" />
+              </a>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/70 bg-white/75 transition-all duration-300 hover:scale-105 md:hidden dark:border-slate-700/70 dark:bg-slate-900/75"
+                aria-label="Menu"
+              >
+                {menuOpen ? <X size={20} className="text-slate-700 dark:text-slate-100" /> : <Menu size={20} className="text-slate-700 dark:text-slate-100" />}
               </button>
-            ))}
-
-            <a
-              href="/resume.pdf"
-              download
-              className="ml-1 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-primary transition-all duration-300 ease-in-out rounded-full hover:bg-secondary/60"
-            >
-              Resume
-            </a>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-
-            <a
-              href="https://github.com/GVishnuVardhanRaju"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full glass flex items-center justify-center transition-all duration-300 hover:scale-110"
-            >
-              <Github size={18} className="text-foreground" />
-            </a>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden w-9 h-9 rounded-full glass flex items-center justify-center transition-all duration-300 hover:scale-110"
-              aria-label="Menu"
-            >
-              {menuOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
+            </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -107,30 +152,30 @@ const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 md:hidden"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 bg-[rgba(248,252,255,0.95)] dark:bg-[rgba(15,23,42,0.95)] backdrop-blur-xl md:hidden"
           >
-            {navLinks.map((link, i) => (
+            {navLinks.map((link, index) => (
               <motion.button
                 key={link.href}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.08, duration: 0.4 }}
+                transition={{ delay: 0.08 + index * 0.06, duration: 0.35 }}
                 onClick={() => handleNavClick(link.href)}
-                className="text-3xl font-display font-bold text-foreground hover:text-primary transition-all duration-300"
+                className="text-3xl font-semibold text-slate-800 dark:text-slate-100 transition-all duration-300 hover:text-sky-600"
               >
                 {link.label}
               </motion.button>
             ))}
 
             <motion.a
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.4 }}
+              transition={{ delay: 0.4, duration: 0.35 }}
               href="/resume.pdf"
               download
-              className="mt-4 px-6 py-3 rounded-full bg-primary text-primary-foreground font-semibold text-lg transition-all hover:scale-105"
+              className="rounded-full bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] px-6 py-3 text-lg font-semibold text-white shadow-[0_15px_50px_-20px_rgba(56,189,248,0.6)] transition-all duration-300 hover:scale-105"
             >
-              📄 Download Resume
+              Download Resume
             </motion.a>
           </motion.div>
         )}

@@ -1,42 +1,5 @@
 import { motion } from "framer-motion";
-import type { IconType } from "react-icons";
-import { SiPhp, SiReact, SiJavascript, SiNextdotjs, SiTypescript, SiTailwindcss, SiHtml5, SiCss, SiMysql, SiPython, SiGit, SiNodedotjs, SiExpress, SiMongodb, SiVercel, SiH2Database, SiGithub, SiOpenai } from "react-icons/si";
-import { FaJava } from "react-icons/fa";
-import { TbBrandCSharp, TbBrandVscode, TbDatabase } from "react-icons/tb";
-
-
-interface Skill {
-  name: string;
-  icon: IconType;
-  color: string;
-}
-
-const TechStack: Skill[] = [
-  { name: "PHP", icon: SiPhp, color: "#777BB4" },
-  { name: "HTML", icon: SiHtml5, color: "#E34F26" },
-  { name: "CSS", icon: SiCss, color: "#1572B6" },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
-  { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
-  { name: "React.js", icon: SiReact, color: "#61DAFB" },
-  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
-  { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
-  { name: "TailwindCSS", icon: SiTailwindcss, color: "#06B6D4" },
-  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-  { name: "MySQL", icon: SiMysql, color: "#4479A1" },
-  { name: "Python", icon: SiPython, color: "#3776AB" },
-];
-
-const AdditionalSkills: Skill[] = [
-  { name: "Express.js", icon: SiExpress, color: "#000000" },
-  { name: "Java", icon: FaJava, color: "#ED8B00" },
-  { name: "C#.NET", icon: TbBrandCSharp, color: "#512BD4" },
-  { name: "Oracle SQL", icon: TbDatabase, color: "#4479A1" },
-  { name: "Git", icon: SiGit, color: "#F05032" },
-  { name: "Github", icon: SiGithub, color: "#000000" },
-  { name: "Vercel", icon: SiVercel, color: "#000000" },
-  { name: "VS Code", icon: TbBrandVscode, color: "#007ACC" },
-  { name: "AI Tools", icon: SiOpenai, color: "#10A37F" },
-];
+import SKILLS, { Skill } from "@/data/skills";
 
 const containerVariants = {
   hidden: {},
@@ -46,94 +9,59 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" as const } },
 };
 
-const SkillPill = ({ skill }: { skill: Skill }) => {
+const SkillCard = ({ skill }: { skill: Skill }) => {
   const Icon = skill.icon;
   return (
-    <motion.div variants={itemVariants} className="skill-pill">
-      <Icon
-  size={20}
-  className={`shrink-0 ${
-    skill.color === "#000000"
-      ? "text-black dark:text-white"
-      : ""
-  }`}
-  style={{ color: skill.color !== "#000000" ? skill.color : undefined }}
-/>
-      <span className="text-sm font-medium text-foreground">{skill.name}</span>
+    <motion.div
+      variants={itemVariants}
+      whileHover={{ scale: 1.04, y: -4 }}
+      className="frost-card frost-card-hover flex min-h-[144px] flex-col items-center justify-center rounded-[1.35rem] p-5 text-center dark:border-slate-700/60 dark:bg-slate-950/70"
+      role="article"
+      aria-label={skill.name}
+    >
+      <div
+        className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl"
+        style={{ background: `linear-gradient(135deg, ${skill.color}22, ${skill.color}16)`, ["--icon-color" as string]: skill.color }}
+      >
+        <Icon size={24} className="skill-icon" data-dark-fallback={skill.color === "#000000" ? "true" : "false"} />
+      </div>
+      <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{skill.name}</span>
     </motion.div>
   );
 };
 
 const SkillsSection = () => {
   return (
-    <section id="skills" className="py-20 px-5 relative">
-      {/* 🔥 Background Glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-72 h-72 bg-purple-500/20 blur-3xl rounded-full" />
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-indigo-500/20 blur-3xl rounded-full" />
-      </div>
-
-      <div className="container max-w-2xl">
+    <section id="skills" className="relative px-4 py-20 sm:px-6 lg:px-8 section-panel dark:backdrop-blur-sm">
+      <div className="container mx-auto max-w-6xl">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          viewport={{ once: true }}
+          transition={{ duration: 0.55 }}
+          className="mb-8 max-w-2xl"
         >
-          <h2 className="text-3xl sm:text-4xl font-display font-bold mb-3">
-            My <span className="gradient-text">Skills</span>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.24em] text-sky-700 dark:text-sky-400">Skills</p>
+          <h2 className="text-3xl font-semibold text-slate-900 dark:text-slate-100 sm:text-4xl">
+            Built with <span className="gradient-text">modern tools</span>
           </h2>
-          <p className="text-muted-foreground">Technologies I work with</p>
         </motion.div>
 
-        <div className="mb-10">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4"
-          >
-            🔹 Tech Stack
-          </motion.p>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-3"
-          >
-            {TechStack.map((s) => (
-              <SkillPill key={s.name} skill={s} />
-            ))}
-          </motion.div>
-        </div>
-
-        <div>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4"
-          >
-            🔹 Additional Skills
-          </motion.p>
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-2 sm:grid-cols-3 gap-3"
-          >
-            {AdditionalSkills.map((s) => (
-              <SkillPill key={s.name} skill={s} />
-            ))}
-          </motion.div>
-        </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4"
+        >
+          {SKILLS.map((skill) => (
+            <SkillCard key={skill.name} skill={skill} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
